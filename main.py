@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
@@ -96,3 +97,15 @@ today_date = datetime.now().strftime('%Y-%m-%d')
 
 # Run the Tkinter event loop
 root.mainloop()
+# Function to save tasks from the Treeview widget to a CSV file
+def save_tasks(tree):
+    tasks = []
+    for row in tree.get_children():
+        tasks.append(tree.item(row, "values"))
+    if tasks:  # Check if the list is not empty
+        df = pd.DataFrame(tasks, columns=["Date", "Time Slot", "Task"])
+        df.to_csv("saved_tasks.csv", index=False)
+    else:
+        if os.path.exists("saved_tasks.csv"):  # Remove the saved file if no tasks are left
+            os.remove("saved_tasks.csv")
+
